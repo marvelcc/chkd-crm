@@ -1,0 +1,11 @@
+<?php
+  $get = mysqli_query($conn, "SELECT name_de FROM company ORDER BY name_de ASC");
+  $select_company ='';
+  while ($row = mysqli_fetch_assoc($get)){
+    $select_company ='<option value = "'.$row['name_de'].'">'.$row['name_de'].'</option>';
+  }
+ ?>
+
+ ----------------------------------------------------------------------------------------------
+
+ 

@@ -1,5 +1,5 @@
 <?php
-require_once 'config.php';
+require_once 'conn.php';
 //User-Account neu anmelden
 // Variablen mit Nullwerte definieren
 $username = "";
@@ -17,7 +17,6 @@ $err_email="";
 $mobile="";
 $err_mobile="";
 
-// Formulardaten überprüfen wenn gesendet
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 
     // Benutzername überprüfen
@@ -27,7 +26,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     else{
         // Prepared Statement um zu prüfen ob Benutzername schon genommen wurde
         $sql = "SELECT user_id FROM user WHERE username = ?";
-        if($stmt = mysqli_prepare($link, $sql)){
+        if($stmt = mysqli_prepare($conn, $sql)){
             // Variablen als Parameter binden
             mysqli_stmt_bind_param($stmt, 's', $param_username);
 
@@ -39,7 +38,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                mysqli_stmt_store_result($stmt);
 
                 if(mysqli_stmt_num_rows($stmt) == 1){         //Wenn 1 dann wurde Benutzername genommen
-                    $err_username = "Username already taken!";
+                    $err_username = "This username already exists!";
                 }
                 else{
                     $username = trim($_POST["username"]);
@@ -113,7 +112,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         // Prepared Statement zum Einschreiben der Kontodetails
         $sql = "INSERT INTO user (first_name, last_name, email, mobile, username, password)  VALUES (?, ?, ?, ?, ?, ?)";
 
-        if($stmt = mysqli_prepare($link, $sql)){
+        if($stmt = mysqli_prepare($conn, $sql)){
             mysqli_stmt_bind_param($stmt, 'ssssss', $param_first_name, $param_last_name, $param_email, $param_mobile, $param_username, $param_password);
             $param_first_name = $first_name;
             $param_last_name = $last_name;
@@ -131,27 +130,43 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         }
         mysqli_stmt_close($stmt);
     }
-    mysqli_close($link);
+    mysqli_close($conn);
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-16">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sign Up</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
-    <link rel="stylesheet" href="/css/style.css">
     <style type="text/css">
         body{ font: 15px sans-serif; }
         .wrapper{ width: 300px; padding: 20px; margin-left: auto; margin-right: auto;}
+
+        .btn {                                  /*Button style*/
+          -webkit-border-radius: 10;
+          -moz-border-radius: 10;
+          border-radius: 10px;
+          font-family: Arial;
+          color: #ffffff;
+          font-size: 20px;
+          background: #f03c3c;
+          padding: 10px 20px 10px 20px;
+          text-decoration: none;
+        }
+
+        .btn:hover {                        /*Button hover style*/
+          background: #ff0000;
+          text-decoration: none;
+        }
     </style>
 </head>
 <body>
     <div class="wrapper">
         <h3>Sign up for an account</h3>
-          <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);  ?>" >
+          <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);  ?>" accept-charset="gbk">
             <!--Username-->
             <div class="form-group <?php echo (!empty($err_username)) ? 'has-error' : ''; ?>">
                 <label>Username</label>
@@ -160,7 +175,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             </div>
             <!--Passwort-->
             <div class="form-group <?php echo (!empty($err_password)) ? 'has-error' : ''; ?>">
-                <label> Password <sub>*must be at least 8 characters</sub></label>
+                <label> Password <sub>(*must be at least 8 characters)</sub></label>
                 <input type="password" name="password" class="form-control" value="<?php echo $password; ?>">
                 <span class="help-block"><?php echo $err_password; ?></span>
             </div>
@@ -196,8 +211,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             </div>
 
             <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Submit">
-                <input type="reset" class="btn btn-default" value="Reset">
+                <input type="submit" class="btn" value="Submit">
+                <input type="reset" class="btn" value="Reset">
             </div>
 
             <p>Already have an account? <a href="login.php">Login here</a>.</p>
