@@ -2,12 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>CHKD e. V. CRM System</title>
-<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width; initial-scale=1">
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
 <script src="js/bootstrap.min.js"></script>
 <style type="text/css">
+
+  .wrapper1{ width: 600px; padding: 30px; margin-left: auto; margin-right: auto;}
+
   body {
     margin:0;
     font-family: Arial, Helvetica, sans-serif;

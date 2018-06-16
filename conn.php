@@ -2,7 +2,8 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "chkdtest";
+$dbname = "chkdcrm";
+
 
 // Verbindung aufbauen
 $conn = mysqli_connect($servername, $username, $password, $dbname);

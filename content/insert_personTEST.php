@@ -1,6 +1,6 @@
 <!-- Neuer Kontakt hinzufügen -->
 <?php
-  require_once '../conn.php';
+  require_once ('../conn.php');
 
   // Variablen definieren
   $first_name=$err_first_name="";
@@ -9,7 +9,7 @@
   $magazine_sub=$newsletter_sub="";
   $birthday="";
   $priority=$err_priority="";
-  $remark="";
+  $p_remark="";
   $address_type=$err_address_type="";
   $street=$err_street="";
   $city=$err_city="";
@@ -71,7 +71,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
   }
 
   // Medientyp
-  if(isset($_POST["media_type"]) && $_POST["media_type"] == 'nill'){
+  if(isset($_POST["media_type"]) && $_POST["media_type"] == 'not_selected'){
     $err_media_type = "Please select which type of media this contact is!";
   }
   else {
@@ -96,7 +96,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
   }
 
   // Anmerkung
-  $remark = $_POST["remark"];
+  $p_remark = $_POST["p_remark"];
 
   //Telefonnummer
   $p_tel = trim($_POST["p_tel"]);
@@ -125,7 +125,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 
   // Adresstyp
-  if(isset($_POST["type"]) && $_POST["type"] == 'x'){
+  if(isset($_POST["type"]) && $_POST["type"] == 'not_selected'){
     $err_address_type = "Please choose address type!";
   }
   else {
@@ -180,11 +180,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     mysqli_autocommit($conn, FALSE);
 
     // Prepared Statement zum Einschreiben
-    $sql1 = "INSERT INTO person (first_name, last_name, media_type, magazine_sub, newsletter_sub, birthday, priority, remark, p_tel, mobile, fax, p_email, wechat)
+    $sql1 = "INSERT INTO person (first_name, last_name, media_type, magazine_sub, newsletter_sub, birthday, priority, p_remark, p_tel, mobile, fax, p_email, wechat)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        if ($stmt1 = mysqli_prepare($conn, $sql1) or die(mysqli_error($conn))) {
-          mysqli_stmt_bind_param($stmt1, 'sssiissssssss', $param_first_name, $param_last_name, $param_media_type, $param_magazine_sub, $param_newsletter_sub, $param_birthday, $param_priority, $param_remark, $param_p_tel, $param_mobile, $param_fax, $param_p_email, $param_wechat);
+        if ($stmt1 = mysqli_prepare($conn, $sql1)) {
+          mysqli_stmt_bind_param($stmt1, 'sssiissssssss', $param_first_name, $param_last_name, $param_media_type, $param_magazine_sub, $param_newsletter_sub, $param_birthday, $param_priority, $param_p_remark, $param_p_tel, $param_mobile, $param_fax, $param_p_email, $param_wechat);
 
           $param_first_name = $first_name;
           $param_last_name = $last_name;
@@ -193,7 +193,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
           $param_newsletter_sub = $newsletter_sub;
           $param_birthday = $birthday;
           $param_priority = $priority;
-          $param_remark = $remark;
+          $param_p_remark = $p_remark;
           $param_p_tel = $p_tel;
           $param_mobile = $mobile;
           $param_fax = $fax;
@@ -226,45 +226,32 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 
 
-  $sql4 = "INSERT INTO company (name_de)
-           VALUES (?)";
-      if ($stmt4 = mysqli_prepare($conn, $sql4) or die(mysqli_error($conn))){
-        mysqli_stmt_bind_param($stmt4, 's', $param_name_de);
-
-        $param_name_de = $name_de;
+  $sql3 = "SELECT company_id FROM company WHERE name_de = '$name_de' ";
+      $result = mysqli_query($conn, $sql3);
+      while($row = mysqli_fetch_assoc($result)){
+        $company_id = $row['company_id'];
       }
 
-      mysqli_stmt_execute($stmt4);
-      $company_id = mysqli_insert_id($conn);
-      mysqli_stmt_close($stmt4);
 
 
-  $sql5 = "INSERT INTO job (person_id, company_id, department, position)
-           VALUES ('$person_id', '$company_id', ?, ?)";
-      if ($stmt5 = mysqli_prepare($conn, $sql5) or die(mysqli_error($conn))){
-        mysqli_stmt_bind_param($stmt5, 'ss', $param_dep, $param_pos);
+  $sql4 = "INSERT INTO job (person_id, company_id, department, position)
+           VALUES ($person_id, $company_id, ?, ?)";
+      if ($stmt4 = mysqli_prepare($conn, $sql4)){
+        mysqli_stmt_bind_param($stmt4, 'ss', $param_dep, $param_pos);
 
         $param_dep = $department;
         $param_pos = $position;
       }
 
-      mysqli_stmt_execute($stmt5);
-      mysqli_stmt_close($stmt5);
+      mysqli_stmt_execute($stmt4) or die(mysqli_error($conn));
+      mysqli_stmt_close($stmt4);
 
 
 
-  $sql6 = "INSERT INTO person_address (person_id, address_id)
-           VALUES (?, ?)";
-      if ($stmt6 = mysqli_prepare($conn, $sql6) or die(mysqli_error($conn))){
-        mysqli_stmt_bind_param($stmt5, 'ii', $param_pid, $param_aid);
+  $sql5 = "INSERT INTO person_address (person_id, address_id)
+           VALUES ($person_id, $address_id)";
 
-        $param_pid = $person_id;
-        $param_aid = $address_id;
-      }
-
-      mysqli_stmt_execute($stmt6);
-      mysqli_stmt_close($stmt6);
-
+  mysqli_query($conn, $sql5)  or die(mysqli_error($conn));
 
   header("location: person.php");
 
@@ -293,7 +280,7 @@ include_once('../page/head.php');
 <h3 style="padding-left:15px; font-weight:bolder;">Create new contacts</h3>
 
 
-<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);  ?>" method="post" style="padding-left:15px">
+<form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);  ?>" method="post" class="wrapper1">
 
 
   <!--First name-->
@@ -310,6 +297,21 @@ include_once('../page/head.php');
     <span class="help-block"><?php echo $err_last_name; ?></span>
   </div>
 
+  <!-- Company -->
+  <div class="form-group <?php echo (!empty($err_name_de)) ? 'has-error' : ''; ?>">
+    <label>Company name</label>
+    <?php
+      echo '<select name="name_de">';
+      echo '<option value="" selected>Please select</option>';
+      $get = mysqli_query($conn, "SELECT name_de FROM company ORDER BY name_de ASC");
+      while ($row = mysqli_fetch_assoc($get)){
+        echo '<option value = "'.$row['name_de'].'">'.$row['name_de'].'</option> </select>';
+      }
+     ?>
+    <span class="help-block"><?php echo $err_name_de; ?></span>
+  </div>
+
+
   <!-- Abteilung -->
   <div class="form-group <?php echo (!empty($err_department)) ? 'has-error' : ''; ?>">
     <label>Department</label>
@@ -324,22 +326,16 @@ include_once('../page/head.php');
     <span class="help-block"><?php echo $err_position; ?></span>
   </div>
 
-  <!-- Company -->
-  <div class="form-group <?php echo (!empty($err_name_de)) ? 'has-error' : ''; ?>">
-    <label>Company name</label>
-    <input type="text" name="name_de" class="form-control" value="<?php echo $name_de ?>">
-    <span class="help-block"><?php echo $err_name_de; ?></span>
-  </div>
 
   <!-- Media type -->
   <div class="form-group <?php echo (!empty($err_media_type)) ? 'has-error' : ''; ?>">
     <label>Media Type</label>
     <select name="media_type">
-      <option value="nill">Please select</option>
-      <option value="german">German media</option>
-      <option value="chinese">Chinese media</option>
-      <option value="foreign">Foreign media</option>
-      <option value="not">Not media</option>
+      <option value="not_selected">Please select</option>
+      <option value="german">german</option>
+      <option value="chinese">chinese</option>
+      <option value="foreign">foreign</option>
+      <option value="not">not</option>
     </select>
     <span class="help-block"><?php echo $err_media_type; ?></span>
   </div>
@@ -347,7 +343,6 @@ include_once('../page/head.php');
   <!-- Magazine subscription -->
   <div class="form-group">
     <label>Magazine subscription:</label>
-
     <input type="checkbox" name="magazine_sub" value="1"/>
   </div>
 
@@ -368,12 +363,12 @@ include_once('../page/head.php');
     <label>Priority</label>
     <select name="priority">
       <option value="not_selected">Please select</option>
-      <option value="High">High</option>
-      <option value="Medium">Medium</option>
-      <option value="Low">Low</option>
-      <option value="None">None</option>
+      <option value="high">High</option>
+      <option value="medium">Medium</option>
+      <option value="low">Low</option>
+      <option value="none">None</option>
     </select>
-    <span class="help-block"><?php echo "$err_priority"; ?></span>
+    <span class="help-block"><?php echo $err_priority; ?></span>
   </div>
 
   <!-- Telephone -->
@@ -448,7 +443,7 @@ include_once('../page/head.php');
   <div class="form-group <?php echo(!empty($err_address_type)) ? 'has-error' : ''; ?>">
     <label>Address Type</label>
     <select name="type">
-      <option value="x">Please select</option>
+      <option value="not_selected">Please select</option>
       <option value="invoice">Invoice</option>
       <option value="mailing">Mailing</option>
       <option value="shipping">Shipping</option>
@@ -460,7 +455,7 @@ include_once('../page/head.php');
   <!-- Remark -->
   <div class="form-group">
     <label>Remark</label>
-    <input type="text" name="remark">
+    <input type="text" name="p_remark">
   </div>
 
   <div class="form-group">
