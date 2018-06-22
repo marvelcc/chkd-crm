@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `chkdcrm`.`company` (
   `website` VARCHAR(255) NULL  ,
   `c_tel` VARCHAR(20) NOT NULL  ,
   `c_email` VARCHAR(150) NOT NULL  ,
-  `service_region` ENUM('EU', 'Western Europe', 'Germany and German-speaking region', 'Others') NOT NULL,
+  `service_region` ENUM('EU', 'Western Europe', 'Germany and German-speaking region', 'Other') NOT NULL,
   `employee_count` INT(8) NULL,
   `registration_nr` VARCHAR(15) NULL  ,
   `annual_revenue` VARCHAR(20) NULL,
@@ -156,7 +156,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `chkdcrm`.`task` (
   `task_id` INT(11) NOT NULL AUTO_INCREMENT,
-  `task_type` ENUM('email', 'call', 'meeting', 'other') NOT NULL,
+  `task_type` ENUM('Email', 'Call', 'Meeting', 'Other') NOT NULL,
   `task_desc` TEXT NULL,
   `due` DATETIME NULL,
   PRIMARY KEY (`task_id`))

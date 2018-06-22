@@ -62,7 +62,7 @@ include_once('../page/head.php');
                 echo '<a class="btnsml" href="company_address.php?company_id='.$row['company_id'].'">Detail</a>';
                 echo '</td>';
                 echo '<td>';
-                echo '<a class="btnsml"           href="edit_company.php?company_id='.$row['company_id'].'">Edit</a>';
+                echo '<a class="btnsml" href="edit_company.php?company_id='.$row['company_id'].'">Edit</a>';
                 echo ' ';
                 echo '<a class="btnsml" href="delete_company.php?company_id='.$row['company_id'].'">Delete</a>';
                 echo '</td>';

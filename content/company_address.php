@@ -3,13 +3,6 @@
 
   $company_id = isset($_GET['company_id'])? $_GET['company_id'] : '';
 
-
-  $sql = "SELECT * FROM company natural join address natural join company_address where company_id = '$company_id' ";
-  $result = mysqli_query($conn, $sql);
-  $row = mysqli_fetch_assoc($result);
-
-  mysqli_close($conn);
-
 ?>
 
 <?php include_once ('../page/head.php') ?>
@@ -18,33 +11,30 @@
 
 <?php include_once ('../page/menu.php') ?>
 
-<h3 style="text-align: center; font-weight:bolder;"><b> <?php  echo $row['name_de'];?> ---- Address information</b></h3>
+<h3 style="text-align: center; font-weight:bolder;"><b>Address information</b></h3>
 <br>
 
-
-<form>
 <?php
-echo '<input type="button" value="Add new address" onclick="window.location.href=\'insert_company_address.php?company_id='.$row['company_id'].'\'" class="btnsml"/>'
-;?>
+echo '<div>';
+echo '<table class="table table-striped table-bordered">';
+echo '<thead>';
+echo '<tr>';
+echo '<th>Address type</th>';
+echo '<th>Street</th>';
+echo      '<th>ZIP</th>';
+echo      '<th>City</th>';
+echo      '<th>State/Province</th>';
+echo      '<th>Country</th>';
+echo     '<th></th>';
+echo    '</tr>';
+echo  '</thead>';
+echo  '<tbody>';
 
-</form>
+    $sql = "SELECT * FROM company natural join address natural join company_address where company_id = '$company_id' ";
+    $result = mysqli_query($conn, $sql);
+    while($row = mysqli_fetch_assoc($result)){
 
 
-<div>
-  <table class="table table-striped table-bordered">
-  <thead>
-    <tr>
-      <th>Address type</th>
-      <th>Street</th>
-      <th>ZIP</th>
-      <th>City</th>
-      <th>State/Province</th>
-      <th>Country</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php
       echo '<tr>';
       echo '<td>'. $row['type'] . '</td>';
       echo '<td>'. $row['street'] . '</td>';
@@ -53,14 +43,25 @@ echo '<input type="button" value="Add new address" onclick="window.location.href
       echo '<td>'. $row['state'] . '</td>';
       echo '<td>'. $row['country'] . '</td>';
       echo '<td>';
-      echo '<a class="btnsml" href="edit_company_address.php?company_id='.$row['company_id'].'">Edit</a>';
+      echo '<a class="btnsml" href="edit_company_address.php?company_id='.$row['company_id'].'&address_id='.$row['address_id'].'">Edit</a>';
       echo ' ';
-      echo '<a class="btnsml" href="delete_company_address.php?company_id='.$row['company_id'].'">Delete</a>';
+      echo '<a class="btnsml" href="delete_company_address.php?company_id='.$row['company_id'].'&address_id='.$row['address_id'].'">Delete</a>';
       echo '</td>';
       echo '</tr>';
+
+
+    }
+      mysqli_close($conn);
+
     ?>
   </tbody>
   </table>
+  <form>
+  <?php
+  echo '<input type="button" value="Add new address" onclick="window.location.href=\'insert_company_address.php?company_id='.$row['company_id'].'\'" class="btnsml"/>'
+  ;?>
+
+  </form>
 </div>
 
 

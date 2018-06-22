@@ -2,9 +2,9 @@
   require_once('../conn.php');
 
   $company_id = isset($_GET['company_id'])? $_GET['company_id'] : '';
+  $address_id = isset($_GET['address_id'])? $_GET['address_id'] : '';
 
-
-  $sql = "SELECT * FROM company natural join address natural join company_address where company_id = '$company_id' ";
+  $sql = "SELECT * FROM company natural join address natural join company_address where company_id = '$company_id' AND address_id = '$address_id' ";
   $result = mysqli_query($conn, $sql);
   $row = mysqli_fetch_assoc($result);
 
@@ -59,6 +59,7 @@
 
   <div class="form-group">
     <input type="hidden" name="company_id" value="<?php echo $row['company_id']?>" />
+    <input type="hidden" name="address_id" value="<?php echo $row['address_id']?>" />
     <input type="submit" name="submit" class="btnsml" value="Submit">
     <input type="reset" class="btnsml" value="Reset">
     <a href="company_address.php" class="btnsml">Back</a>

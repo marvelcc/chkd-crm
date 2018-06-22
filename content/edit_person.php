@@ -47,19 +47,6 @@
     <input type="text" name="name_de" class="form-control" value="<?php echo isset ($row['name_de'])?$row['name_de']:''; ?>">
   </div>
 
-  <div class="form-group">
-    <label>Company name</label>
-    <br>
-    <?php
-      echo '<select name="name_de">';
-      $employer = mysqli_query($conn, "SELECT name_de FROM company ORDER BY name_de ASC");
-      while ($row2 = mysqli_fetch_assoc($employer)){
-        echo '<option value = "'.$row2['name_de'].'">'.$row2['name_de'].'</option>';
-      }
-      echo '</select>';
-     ?>
-  </div>
-
 
   <!-- Media type -->
   <div class="form-group">
@@ -94,10 +81,10 @@
   <div class="form-group">
     <label>Priority</label>
     <select name="priority" value="<?php echo $row['priority'];?>">
-      <option value="High" <?php if($row['priority'] == 'high') echo 'selected="selected"'; ?>>High</option>
-      <option value="Medium" <?php if($row['priority'] == 'medium') echo 'selected="selected"'; ?>>Medium</option>
-      <option value="Low" <?php if($row['priority'] == 'low') echo 'selected="selected"'; ?>>Low</option>
-      <option value="None" <?php if($row['priority'] == 'none') echo 'selected="selected"'; ?>>None</option>
+      <option value="High" <?php if($row['priority'] == 'High') echo 'selected="selected"'; ?>>High</option>
+      <option value="Medium" <?php if($row['priority'] == 'Medium') echo 'selected="selected"'; ?>>Medium</option>
+      <option value="Low" <?php if($row['priority'] == 'Low') echo 'selected="selected"'; ?>>Low</option>
+      <option value="None" <?php if($row['priority'] == 'None') echo 'selected="selected"'; ?>>None</option>
     </select>
   </div>
 

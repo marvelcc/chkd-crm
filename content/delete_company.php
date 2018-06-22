@@ -3,7 +3,8 @@
 
   $company_id = isset($_GET['company_id'])? $_GET['company_id'] : '';
 
-  $sql = "SELECT * FROM company natural join company_address natural join address WHERE company_id ='{$company_id}'";
+
+  $sql = "SELECT * FROM company natural join company_address natural join address WHERE company_id ='.$company_id.'";
   $result = mysqli_query($conn, $sql);
   $row = mysqli_fetch_assoc($result);
   mysqli_close($conn);
