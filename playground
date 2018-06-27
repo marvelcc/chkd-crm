@@ -143,3 +143,15 @@
   <option value="External">External</option>
 </select>
 <span class="help-block"><?php echo $err_priority; ?></span>
+
+-----------------------------------------------------------------------------
+
+<?php
+$sql="SELECT * from role";
+$list = mysqli_query($conn, $sql);
+while($checkbox = mysqli_fetch_assoc($list)){
+  echo'<input type="checkbox" name="roles[]" value="'.$checkbox['role_id'].'">'.$checkbox['role_name'].'</input>';
+  echo '<br>';
+}
+
+ ?>

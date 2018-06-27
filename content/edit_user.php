@@ -45,15 +45,11 @@
   <!-- Roles -->
   <div class="form-group">
     <label>Roles</label><br>
-    <?php
-    $sql="SELECT * from role";
-    $list = mysqli_query($conn, $sql);
-    while($checkbox = mysqli_fetch_assoc($list)){
-      echo'<input type="checkbox" name="roles[]" value="'.$checkbox['role_id'].'">'.$checkbox['role_name'].'</input>';
-      echo '<br>';
-    }
-
-     ?>
+    <input type="checkbox" name="roles[]" value="1">Admin</input>
+    <input type="checkbox" name="roles[]" value="2">Manager</input>
+    <input type="checkbox" name="roles[]" value="3">Staff</input>
+    <input type="checkbox" name="roles[]" value="4">Intern</input>
+    <input type="checkbox" name="roles[]" value="5">External</input>
 
   </div>
 
