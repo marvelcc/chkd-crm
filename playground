@@ -121,10 +121,25 @@
     foreach ($enumlist as $value_a) {
       echo '  <option value="'.$value_a.'"  '; ?>
       <?php if($row['COLUMN_TYPE'] == "'.$value_a.'") echo 'selected="selected"'; ?>
-      <?php 
+      <?php
       echo ">'.$value_a.'</option>";
       }
       echo '</select>';
   ?>
 
 </div>
+
+-----------------------------------------------------------------------------
+
+
+<label>User role</label>
+<br>
+<select name="role">
+  <option value="not_selected">Please select</option>
+  <option value="Admin">Admin</option>
+  <option value="Manager">Manager</option>
+  <option value="Staff">Staff</option>
+  <option value="Intern">Intern</option>
+  <option value="External">External</option>
+</select>
+<span class="help-block"><?php echo $err_priority; ?></span>

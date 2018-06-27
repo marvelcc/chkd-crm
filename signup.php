@@ -16,6 +16,7 @@ $email="";
 $err_email="";
 $mobile="";
 $err_mobile="";
+$role=$err_role="";
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 
@@ -107,13 +108,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $mobile = trim($_POST['mobile']);
     }
 
-    if(empty($err_username) && empty($err_password) && empty($err_password_repeat) && empty($err_first_name) && empty($err_last_name) && empty($err_email) && empty($err_mobile)){
+    if(isset($_POST["role"]) && $_POST["role"] == 'not_selected'){
+      $err_role = "Please select user's role!";
+    }
+    else {
+      $role = $_POST["role"];
+    }
 
+    if(empty($err_username) && empty($err_password) && empty($err_password_repeat) && empty($err_first_name) && empty($err_last_name) && empty($err_email) && empty($err_mobile) && empty($err_role)){
+
+      mysqli_autocommit($conn, FALSE);
         // Prepared Statement zum Einschreiben der Kontodetails
-        $sql = "INSERT INTO user (first_name, last_name, email, mobile, username, password)  VALUES (?, ?, ?, ?, ?, ?)";
+        $sql1 = "INSERT INTO user (first_name, last_name, email, mobile, username, password)  VALUES (?, ?, ?, ?, ?, ?)";
 
-        if($stmt = mysqli_prepare($conn, $sql)){
-            mysqli_stmt_bind_param($stmt, 'ssssss', $param_first_name, $param_last_name, $param_email, $param_mobile, $param_username, $param_password);
+        if($stmt1 = mysqli_prepare($conn, $sql1)){
+            mysqli_stmt_bind_param($stmt1, 'ssssss', $param_first_name, $param_last_name, $param_email, $param_mobile, $param_username, $param_password);
             $param_first_name = $first_name;
             $param_last_name = $last_name;
             $param_email = $email;
@@ -121,15 +130,26 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $param_username = $username;
             $param_password = password_hash($password, PASSWORD_DEFAULT);
 
-            if(mysqli_stmt_execute($stmt)){
-                header("location: login.php");
-            }
-            else{
-                echo "Error: Please contact admin!";
-            }
         }
-        mysqli_stmt_close($stmt);
+        mysqli_stmt_execute($stmt1);
+        $user_id= mysqli_insert_id($conn);
+        mysqli_stmt_close($stmt1);
+
+
+
+        $sql3 = "INSERT INTO user_role (user_id, role_id) VALUES ($user_id, ?)";
+        if($stmt3 = mysqli_prepare($conn, $sql3)){
+            mysqli_stmt_bind_param($stmt3, 'i', $param_role);
+            $param_role = $role;}
+            mysqli_stmt_execute($stmt3);
+            mysqli_stmt_close($stmt3);
+
+
+        header("location: login.php");
+
+
     }
+    mysqli_commit($conn);
     mysqli_close($conn);
 }
 ?>
@@ -209,6 +229,22 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 <input type="text" name="mobile" class="form-control "value="<?php echo $mobile; ?>">
                 <span class="help-block"><?php echo $err_mobile ?></span>
             </div>
+
+
+            <div class="form-group <?php echo (!empty($err_role)) ? 'has-error' : ''?>">
+              <label>User role</label>
+              <br>
+              <?php
+                echo '<select name="role">';
+                echo '<option value="not_selected">Please select</option>';
+                $roles = mysqli_query($conn, "SELECT * FROM role Order by role_id ASC");
+                while ($row = mysqli_fetch_assoc($roles)){
+                  echo '<option value="'.$row['role_id'].'">'.$row['role_name'].'</option>';
+                }
+                echo '</select>';
+               ?>
+            </div>
+
 
             <div class="form-group">
                 <input type="submit" class="btn" value="Submit">

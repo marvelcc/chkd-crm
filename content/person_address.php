@@ -1,7 +1,7 @@
 <?php
   require_once('../conn.php');
 
-  $company_id = isset($_GET['company_id'])? $_GET['company_id'] : '';
+  $person_id = isset($_GET['person_id'])? $_GET['person_id'] : '';
 
 ?>
 
@@ -30,7 +30,7 @@ echo    '</tr>';
 echo  '</thead>';
 echo  '<tbody>';
 
-    $sql = "SELECT * FROM company natural join address natural join company_address where company_id = '$company_id' ";
+    $sql = "SELECT * FROM person natural join address natural join person_address where person_id = '$person_id' ";
     $result = mysqli_query($conn, $sql);
     while($row = mysqli_fetch_assoc($result)){
 
@@ -43,9 +43,9 @@ echo  '<tbody>';
       echo '<td>'. $row['state'] . '</td>';
       echo '<td>'. $row['country'] . '</td>';
       echo '<td>';
-      echo '<a class="btnsml" href="edit_company_address.php?company_id='.$row['company_id'].'&address_id='.$row['address_id'].'">Edit</a>';
+      echo '<a class="btnsml" href="edit_person_address.php?person_id='.$row['person_id'].'&address_id='.$row['address_id'].'">Edit</a>';
       echo ' ';
-      echo '<a class="btnsml" href="delete_company_address.php?company_id='.$row['company_id'].'&address_id='.$row['address_id'].'">Delete</a>';
+      echo '<a class="btnsml" href="delete_person_address.php?person_id='.$row['person_id'].'&address_id='.$row['address_id'].'">Delete</a>';
       echo '</td>';
       echo '</tr>';
 
@@ -58,7 +58,7 @@ echo  '<tbody>';
   echo '</table>';
   echo '<form>';
 
-  echo '<input type="button" value="Add new address" onclick="window.location.href=\'insert_company_address.php?company_id='.$company_id.'\'" class="btnsml"/>'
+  echo '<input type="button" value="Add new address" onclick="window.location.href=\'insert_person_address.php?person_id='.$person_id.'\'" class="btnsml"/>'
   ;
 
   echo '</form>';

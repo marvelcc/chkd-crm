@@ -1,7 +1,7 @@
 <?php
   require_once '../conn.php';
 
-  $company_id = isset($_GET['company_id'])? $_GET['company_id'] : '';
+  $person_id = isset($_GET['person_id'])? $_GET['person_id'] : '';
 
   $type=$err_type="";
   $street=$err_street="";
@@ -20,14 +20,14 @@
     }
 
     if(empty(trim($_POST["street"]))){
-        $err_street = "Please enter the street name!";
+      $err_street = "Please enter the street name!";
     }
     else {
       $street = trim($_POST["street"]);
     }
 
     if(empty(trim($_POST["zip"]))){
-        $err_zip = "Please enter the ZIP code!";
+      $err_zip = "Please enter the ZIP code!";
     }
     else {
       $zip = trim($_POST["zip"]);
@@ -68,17 +68,19 @@
       $address_id = mysqli_insert_id($conn);
       mysqli_stmt_close($stmt1);
 
-
-      $sql2 = "INSERT INTO company_address (company_id, address_id) VALUES (?, ?)";
-      if ($stmt2 = mysqli_prepare($conn, $sql2)){
-        mysqli_stmt_bind_param($stmt2, 'ii', $company_id, $address_id);
+      $sql3 = "SELECT * FROM person WHERE person_id = '$person_id'";
+      $result = mysqli_query($conn, $sql3);
+      while($row = mysqli_fetch_assoc($result)){
+        $pid = $row['person_id'];
       }
-      mysqli_stmt_execute($stmt2);
-      mysqli_stmt_close($stmt2);
+
+
+      $sql2 = "INSERT INTO person_address (person_id, address_id) VALUES ('$person_id', '$address_id')";
+      mysqli_query($conn, $sql2) or die(mysqli_error($conn));
 
 
 
-      header("location: company.php");
+      header("location: person_address.php?person_id=$person_id");
     }
       mysqli_commit($conn);
 
@@ -155,8 +157,9 @@
     </div>
 
     <div class="form-group">
-      <input type="submit" class="btnsml" value="Confirm">
-      <input type="reset" class="btnsml" value="Reset">
+      <input type="hidden" name="person_id" value="$person_id"/>
+      <input type="submit" class="btnsml" value="Confirm"/>
+      <input type="reset" class="btnsml" value="Reset"/>
     </div>
   </form>
 

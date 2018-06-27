@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `chkdcrm`.`person_address` (
   CONSTRAINT `address_id`
     FOREIGN KEY (`address_id`)
     REFERENCES `chkdcrm`.`address` (`address_id`)
-    ON DELETE NO ACTION,
+    ON DELETE CASCADE,
   CONSTRAINT `person_id`
     FOREIGN KEY (`person_id`)
     REFERENCES `chkdcrm`.`person` (`person_id`)
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `chkdcrm`.`company` (
   `c_remark` TEXT NULL,
   `c_date_added` DATETIME NOT NULL DEFAULT NOW(),
   `member_type` ENUM('Board', 'Counsil', 'Class A', 'Class B', 'Automotive Committee', 'Support', 'Not') NOT NULL,
-  `industry` ENUM('Agro', 'Metal', 'Automobile', 'Construction', 'Pharmaceutical', 'Finance', 'Media', 'Electronics', 'Logistic', 'Textile', 'Energy', 'Other') NOT NULL,
+  `industry` ENUM('Agro', 'Metal', 'Automobile', 'Construction', 'Pharma', 'Publishing', 'Finance', 'Media', 'Electronics', 'Logistic', 'IT', 'Energy', 'Other') NOT NULL,
   `parent_company` INT(11) NULL,
   PRIMARY KEY (`company_id`),
   CONSTRAINT `parent_company`

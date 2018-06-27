@@ -62,7 +62,7 @@
     <input type="hidden" name="address_id" value="<?php echo $row['address_id']?>" />
     <input type="submit" name="submit" class="btnsml" value="Submit">
     <input type="reset" class="btnsml" value="Reset">
-    <a href="company_address.php" class="btnsml">Back</a>
+    <a href="company_address.php?company_id=<?php echo $row['company_id']?>" class="btnsml">Back</a>
   </div>
 
 

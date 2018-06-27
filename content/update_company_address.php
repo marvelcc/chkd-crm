@@ -13,7 +13,7 @@
     }
 
     if(mysqli_stmt_execute($stmt)){
-      header("location: company.php");
+      header("location: company_address.php?company_id=$company_id");
     }
     else{
       die("Update failed".mysqli_error());
