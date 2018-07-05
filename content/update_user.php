@@ -1,5 +1,5 @@
 <?php
-  require_once '../conn.php';
+  require_once('../conn.php');
 
 	if ($_POST['submit']) {
 
@@ -16,13 +16,17 @@
         mysqli_stmt_close($stmt1);
 
 
-    $sql2 = "INSERT INTO user_role SET role_id =? WHERE user_id=?";
-    if ($stmt2 = mysqli_prepare($conn, $sql2)){
-      mysqli_stmt_bind_param($stmt2, 'ii', $role, $user_id);
+    mysqli_query($conn, "DELETE FROM user_role where user_id = $user_id") or die(mysqli_error($conn));
+
+    if(isset($_POST['roles'])){
+      foreach ($_POST['roles'] as $ur ) {
+        mysqli_query($conn, "INSERT INTO user_role (role_id, user_id) VALUES($ur, $user_id)") or die(mysqli_error($conn));
+      }
     }
-    mysqli_stmt_execute($stmt2);
-    mysqli_stmt_close($stmt2);
-c
+    else{
+      mysqli_rollback($conn);
+    }
+
     header("location: user.php");
 
 

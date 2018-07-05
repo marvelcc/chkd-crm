@@ -8,15 +8,15 @@ $password = "";
 $err_password = "";
 $password_repeat= "";
 $err_password_repeat = "";
-$first_name ="";
+$u_first_name ="";
 $err_first_name="";
-$last_name ="";
+$u_last_name ="";
 $err_last_name="";
 $email="";
 $err_email="";
 $mobile="";
 $err_mobile="";
-$role=$err_role="";
+$roles=$err_roles="";
 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 
@@ -77,19 +77,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
 
     //Vorname Validierung
-    if(empty(trim($_POST["first_name"]))){
+    if(empty(trim($_POST["u_first_name"]))){
       $err_first_name = 'Please enter your first name!';
     }
     else{
-        $first_name = trim($_POST['first_name']);
+        $u_first_name = trim($_POST['u_first_name']);
     }
 
     //Nachname Validierung
-    if(empty(trim($_POST["last_name"]))){
+    if(empty(trim($_POST["u_last_name"]))){
       $err_last_name = 'Please enter your last name!';
     }
     else{
-        $last_name = trim($_POST['last_name']);
+        $u_last_name = trim($_POST['u_last_name']);
     }
 
     //Email Validierung
@@ -108,23 +108,23 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $mobile = trim($_POST['mobile']);
     }
 
-    if(isset($_POST["role"]) && $_POST["role"] == 'not_selected'){
-      $err_role = "Please select user's role!";
+    if(isset($_POST['roles'])){
+      $roles = $_POST['roles'];
     }
     else {
-      $role = $_POST["role"];
+      $err_roles = "Please select user's roles!";
     }
 
-    if(empty($err_username) && empty($err_password) && empty($err_password_repeat) && empty($err_first_name) && empty($err_last_name) && empty($err_email) && empty($err_mobile) && empty($err_role)){
+    if(empty($err_username) && empty($err_password) && empty($err_password_repeat) && empty($err_first_name) && empty($err_last_name) && empty($err_email) && empty($err_mobile) && empty($err_roles)){
 
       mysqli_autocommit($conn, FALSE);
         // Prepared Statement zum Einschreiben der Kontodetails
-        $sql1 = "INSERT INTO user (first_name, last_name, email, mobile, username, password)  VALUES (?, ?, ?, ?, ?, ?)";
+        $sql1 = "INSERT INTO user (u_first_name, u_last_name, email, mobile, username, password)  VALUES (?, ?, ?, ?, ?, ?)";
 
         if($stmt1 = mysqli_prepare($conn, $sql1)){
             mysqli_stmt_bind_param($stmt1, 'ssssss', $param_first_name, $param_last_name, $param_email, $param_mobile, $param_username, $param_password);
-            $param_first_name = $first_name;
-            $param_last_name = $last_name;
+            $param_first_name = $u_first_name;
+            $param_last_name = $u_last_name;
             $param_email = $email;
             $param_mobile = $mobile;
             $param_username = $username;
@@ -137,12 +137,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 
 
-        $sql3 = "INSERT INTO user_role (user_id, role_id) VALUES ($user_id, ?)";
-        if($stmt3 = mysqli_prepare($conn, $sql3)){
-            mysqli_stmt_bind_param($stmt3, 'i', $param_role);
-            $param_role = $role;}
-            mysqli_stmt_execute($stmt3);
-            mysqli_stmt_close($stmt3);
+        // $sql3 = "INSERT INTO user_role (user_id, role_id) VALUES ($user_id, ?)";
+        // if($stmt3 = mysqli_prepare($conn, $sql3)){
+        //     mysqli_stmt_bind_param($stmt3, 'i', $param_role);
+        //     $param_role = $roles;}
+        //     mysqli_stmt_execute($stmt3);
+        //     mysqli_stmt_close($stmt3);
+
+        if(isset($_POST['roles'])){
+          foreach ($_POST['roles'] as $ur ) {
+            mysqli_query($conn, "INSERT INTO user_role (role_id, user_id) VALUES($ur, $user_id)") or die(mysqli_error($conn));
+
+          }
+        }
 
 
         header("location: login.php");
@@ -208,13 +215,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             <!--Vorname-->
             <div class="form-group <?php echo (!empty($err_first_name)) ? 'has-error' : ''?>">
                 <label>First Name</label>
-                <input type="text" name="first_name" class="form-control "value="<?php echo $first_name; ?>">
+                <input type="text" name="u_first_name" class="form-control "value="<?php echo $u_first_name; ?>">
                 <span class="help-block"><?php echo $err_first_name ?></span>
             </div>
             <!--Nachname-->
             <div class="form-group <?php echo (!empty($err_last_name)) ? 'has-error' : ''?>">
                 <label>Last Name</label>
-                <input type="text" name="last_name" class="form-control "value="<?php echo $last_name; ?>">
+                <input type="text" name="u_last_name" class="form-control "value="<?php echo $u_last_name; ?>">
                 <span class="help-block"><?php echo $err_last_name ?></span>
             </div>
             <!--Email-->
@@ -234,15 +241,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             <div class="form-group <?php echo (!empty($err_role)) ? 'has-error' : ''?>">
               <label>User role</label>
               <br>
-              <?php
-                echo '<select name="role">';
-                echo '<option value="not_selected">Please select</option>';
-                $roles = mysqli_query($conn, "SELECT * FROM role Order by role_id ASC");
-                while ($row = mysqli_fetch_assoc($roles)){
-                  echo '<option value="'.$row['role_id'].'">'.$row['role_name'].'</option>';
-                }
-                echo '</select>';
-               ?>
+              <input type="checkbox" name="roles[]" value="1">Admin</input><br>
+              <input type="checkbox" name="roles[]" value="2">Manager</input><br>
+              <input type="checkbox" name="roles[]" value="3">Staff</input><br>
+              <input type="checkbox" name="roles[]" value="4">Intern</input><br>
+              <input type="checkbox" name="roles[]" value="5">External</input>
+              <span class="help-block"><?php echo $err_mobile ?></span>
             </div>
 
 

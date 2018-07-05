@@ -29,12 +29,12 @@ include_once('../page/head.php');
     </thead>
     <tbody>
       <?php
-       $sql = "SELECT user.user_id, first_name, last_name, email, mobile, GROUP_CONCAT(role_name) FROM user join role join user_role on user.user_id = user_role.user_id AND role.role_id = user_role.role_id GROUP BY user.user_id ASC";
+       $sql = "SELECT user.user_id, u_first_name, u_last_name, email, mobile, GROUP_CONCAT(role_name) FROM user join role join user_role on user.user_id = user_role.user_id AND role.role_id = user_role.role_id GROUP BY user.user_id ASC";
        $result = mysqli_query($conn, $sql);
        while($row = mysqli_fetch_assoc($result)){
                 echo '<tr>';
-                echo '<td>'. $row['first_name'] . '</td>';
-                echo '<td>'. $row['last_name'] . '</td>';
+                echo '<td>'. $row['u_first_name'] . '</td>';
+                echo '<td>'. $row['u_last_name'] . '</td>';
                 echo '<td>'. $row['email'] . '</td>';
                 echo '<td>'. $row['mobile'] . '</td>';
                 echo '<td>'. $row['GROUP_CONCAT(role_name)']. '<br><a class="btnsml" href="edit_user.php?user_id='.$row['user_id'].'">Edit</a></td>';

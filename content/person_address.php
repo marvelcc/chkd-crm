@@ -60,6 +60,8 @@ echo  '<tbody>';
 
   echo '<input type="button" value="Add new address" onclick="window.location.href=\'insert_person_address.php?person_id='.$person_id.'\'" class="btnsml"/>'
   ;
+  echo '<a href="person.php" class="btnsml">Back</a>';
+
 
   echo '</form>';
   echo '</div>';

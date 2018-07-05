@@ -1,11 +1,11 @@
 <?php
   require_once('../conn.php');
 
-  $user_id = isset($_GET['user_id'])? $_GET['user_id'] : '';
+  $task_id = isset($_GET['task_id'])? $_GET['task_id'] : '';
 
 
 
-  $sql1 = "SELECT * FROM user natural join user_role natural join role WHERE user_id ='$user_id'";
+  $sql1 = "SELECT t.task_id, CONCAT(`u_first_name`,' ', `u_last_name`) AS task_owner, task_desc, task_type, CONCAT(`first_name`,' ', `last_name`) AS target, due, tt.person_id  FROM user u JOIN user_has_task ut on u.user_id = ut.user_id JOIN task t on ut.task_id = t.task_id JOIN task_target tt on tt.task_id = t.task_id JOIN person p on p.person_id = tt.person_id WHERE t.task_id = '$task_id'";
   $result = mysqli_query($conn, $sql1);
   $row = mysqli_fetch_assoc($result);
 
@@ -16,12 +16,17 @@
 <?php include_once ('../page/head.php') ?>
 <h1 style="text-align: center; font-weight:bolder;">CHKD e. V. CRM System</h1>
 <?php include_once ('../page/menu.php') ?>
-<h3 style="text-align: center; font-weight:bolder;"><b>Edit contact information</b></h3>
+<h3 style="text-align: center; font-weight:bolder;"><b>Edit task information</b></h3>
 <br>
-<form  method="post" action="update_user.php" class="wrapper1">
+<form  method="post" action="update_task.php" class="wrapper1">
   <div class="form-group">
-    <label>First name</label>
-    <input type="text" name="u_first_name" class="form-control" value="<?php echo isset ($row['u_first_name'])?$row['u_first_name']:''; ?>">
+    <label>Task owner</label>
+    <select name="task_owner">
+      <option value="not_selected">Please select</option>
+    <?php
+      echo '<option value="'.$row['task_id'].'">'.$row['task_owner'].'</option>';
+     ?>
+   </select>
   </div>
 
   <!-- Last Name -->

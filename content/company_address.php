@@ -60,6 +60,7 @@ echo  '<tbody>';
 
   echo '<input type="button" value="Add new address" onclick="window.location.href=\'insert_company_address.php?company_id='.$company_id.'\'" class="btnsml"/>'
   ;
+  echo '<a href="company.php" class="btnsml">Back</a>';
 
   echo '</form>';
   echo '</div>';
