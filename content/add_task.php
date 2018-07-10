@@ -54,7 +54,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
 
 
-
   if(empty($err_task_owner) && empty($err_task_type) &&empty($err_task_desc) &&empty($err_task_target)){
 
     mysqli_autocommit($conn, FALSE);
@@ -170,6 +169,8 @@ include_once('../page/head.php');
   <div class="form-group">
     <input type="submit" class="btnsml" value="Add task">
     <input type="reset" class="btnsml" value="Reset">
+    <a href="task.php" class="btnsml">Back</a>
+
   </div>
 </form>
 

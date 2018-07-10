@@ -161,3 +161,9 @@ while($checkbox = mysqli_fetch_assoc($list)){
 <input type="checkbox" name="roles[]" value="3" <?php if(in_array($row['role_id'], $array)) echo 'checked="checked"'; ?>>Staff</input><br>
 <input type="checkbox" name="roles[]" value="4" <?php if(in_array($row['role_id'], $array)) echo 'checked="checked"'; ?>>Intern</input><br>
 <input type="checkbox" name="roles[]" value="5" <?php if(in_array($row['role_id'], $array)) echo 'checked="checked"'; ?>>External</input>
+---------------------------------------------------------------------------------------
+<!-- Company -->
+<div class="form-group">
+  <label>Company name</label>
+  <input type="text" name="name_de" class="form-control" value="<?php echo isset ($row['name_de'])?$row['name_de']:''; ?>">
+</div>

@@ -5,7 +5,7 @@
 
 
 
-  $sql1 = "SELECT t.task_id, CONCAT(`u_first_name`,' ', `u_last_name`) AS task_owner, task_desc, task_type, CONCAT(`first_name`,' ', `last_name`) AS target, due, tt.person_id  FROM user u JOIN user_has_task ut on u.user_id = ut.user_id JOIN task t on ut.task_id = t.task_id JOIN task_target tt on tt.task_id = t.task_id JOIN person p on p.person_id = tt.person_id WHERE t.task_id = '$task_id'";
+  $sql1 = "SELECT u.user_id, t.task_id, CONCAT(`u_first_name`,' ', `u_last_name`) AS task_owner, task_desc, task_type, CONCAT(`first_name`,' ', `last_name`) AS target, due, tt.person_id  FROM user u JOIN user_has_task ut on u.user_id = ut.user_id JOIN task t on ut.task_id = t.task_id JOIN task_target tt on tt.task_id = t.task_id JOIN person p on p.person_id = tt.person_id WHERE t.task_id = '$task_id'";
   $result = mysqli_query($conn, $sql1);
   $row = mysqli_fetch_assoc($result);
 
@@ -20,69 +20,63 @@
 <br>
 <form  method="post" action="update_task.php" class="wrapper1">
   <div class="form-group">
-    <label>Task owner</label>
+    <label>Task owner</label><br>
     <select name="task_owner">
       <option value="not_selected">Please select</option>
-    <?php
-      echo '<option value="'.$row['task_id'].'">'.$row['task_owner'].'</option>';
-     ?>
+      <?php
+      $result1 = mysqli_query($conn, "SELECT user_id, CONCAT(`u_first_name`, ' ', `u_last_name`) AS fullname FROM user");
+      while ($row1 = mysqli_fetch_assoc($result1)){
+        $selected1 = $row1['user_id']==$row['user_id']? 'selected="selected"':'';
+        echo '<option value="'.$row1['user_id'].'" '.$selected1.' >'.$row1['fullname'].'</option>';
+      }
+       ?>
    </select>
   </div>
 
-  <!-- Last Name -->
+  <!-- task type -->
   <div class="form-group">
-    <label>Last name</label>
-    <input type="text" name="u_last_name" class="form-control" value="<?php echo isset ($row['u_last_name'])?$row['u_last_name']:''; ?>">
+    <label>Task type</label><br>
+    <select name="task_type">
+        <option value="Email" <?php if($row['task_type'] == 'Email') echo 'selected="selected"'; ?>>Email</option>
+        <option value="Call" <?php if($row['task_type'] == 'Call') echo 'selected="selected"'; ?>>Call</option>
+        <option value="Meeting" <?php if($row['task_type'] == 'Meeting') echo 'selected="selected"'; ?>>Meeting</option>
+        <option value="Other" <?php if($row['task_type'] == 'Other') echo 'selected="selected"'; ?>>Other</option>
+      </select>
+   </select>
   </div>
 
 
-  <!-- Mobile -->
+  <!--task description-->
   <div class="form-group">
-    <label>Mobile</label>
-    <input type="text" name="mobile" class="form-control" value="<?php echo isset ($row['mobile'])?$row['mobile']:''; ?>">
+    <label>Task description</label>
+    <br>
+    <textarea rows="5" cols="50" name="task_desc"><?php echo isset($row['task_desc'])?$row['task_desc']:''; ?></textarea>
   </div>
 
-  <!-- Email -->
+  <!-- task_target -->
   <div class="form-group">
-    <label>Email</label>
-    <input type="text" name="email" class="form-control" value="<?php echo isset ($row['email'])?$row['email']:''; ?>">
+    <label>Task target (Person)</label><br>
+    <select name="task_target">
+      <?php
+        $result2 = mysqli_query($conn, "SELECT person_id, CONCAT(`first_name`, ' ', `last_name`) AS target FROM person");
+        while ($row2 = mysqli_fetch_assoc($result2)){
+          $selected2  = $row2['person_id']==$row['person_id']? 'selected="selected"':'';
+          echo '<option value="'.$row2['person_id'].'" '.$selected2.'>'.$row2['target'].'</option>';
+        }
+       ?>
+    </select>
   </div>
 
-  <!-- Roles -->
   <div class="form-group">
-    <label>Roles</label><br>
-    <?php
-      $sql2 = mysqli_query($conn, "SELECT group_concat(role_id) as rid FROM role natural join user_role where user_id = $user_id");
-      $array=array();
-      while($row2 = mysqli_fetch_assoc($sql2)){
-        $rid= $row2['rid'];
-        $array = explode(",", $rid);
-      }
-     ?>
-
-    <?php
-    $select = mysqli_query($conn, "SELECT group_concat(role_id) as rid FROM role");
-    $array2=array();
-    while ($row4=mysqli_fetch_assoc($select)) {
-      $rid2 = $row4['rid'];
-      $array2= explode(",", $rid2);
-    }
-
-    $query = mysqli_query($conn, "SELECT * from role");
-    while($list = mysqli_fetch_assoc($query)){
-      foreach($array2 as $value){
-        $checked = in_array($list['role_id'], $array)? 'checked="checked"':'';
-      }
-      echo'<input type="checkbox" name="roles[]" value="'.$list['role_id'].'" '.$checked.';>'.$list['role_name'].'</input><br>';
-    }
-     ?>
- </div>
+    <label>Due date</label><br>
+    <input type="date" name="due" value="<?php echo isset ($row['due'])?$row['due']:''; ?>">
+  </div>
 
   <div class="form-group">
-    <input type="hidden" name="user_id" value="<?php echo $row['user_id']?>" />
+    <input type="hidden" name="task_id" value="<?php echo $row['task_id']?>" />
     <input type="submit" name="submit" class="btnsml" value="Submit">
     <input type="reset" class="btnsml" value="Reset">
-    <a href="user.php" class="btnsml">Back</a>
+    <a href="task.php" class="btnsml">Back</a>
   </div>
 
 </form>

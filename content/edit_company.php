@@ -8,7 +8,6 @@
   $result = mysqli_query($conn, $sql);
   $row = mysqli_fetch_assoc($result);
 
-  mysqli_close($conn);
 
 ?>
 
@@ -102,15 +101,16 @@
   <div class="form-group">
     <label>Parent company(if exists)</label>
     <br>
-    <?php
-      echo '<select name="parent_company">';
-      echo '<option value="1">n/a</option>';
-      $result1 = mysqli_query($conn, "SELECT company_id, name_de FROM company ORDER BY name_de ASC LIMIT 1, 5000");
+    <select name="parent_company">
+      <option value="1">n/a</option>
+      <?php
+      $result1 = mysqli_query($conn, "SELECT company_id, name_de FROM company WHERE company_id <> '$company_id' AND company_id <> 1 ORDER BY name_de ASC ");
       while ($row2 = mysqli_fetch_assoc($result1)){
-        echo '<option value = "'.$row2['company_id'].'">'.$row2['name_de'].'</option>';
-      }
-      echo '</select>';
-     ?>
+        $selected = $row2['company_id'] ==$row['parent_company']? 'selected="selected"':'';
+        echo '<option value = "'.$row2['company_id'].'" '.$selected.'>'.$row2['name_de'].'</option>';
+        }
+       ?>
+    </select>
   </div>
 
   <div class="form-group">

@@ -45,7 +45,7 @@ include_once('../page/head.php');
     </thead>
     <tbody>
       <?php
-       $sql = "SELECT * FROM person join company join job on person.person_id = job.person_id AND company.company_id = job.company_id";
+       $sql = "SELECT * FROM person natural join company natural join job";
        $result = mysqli_query($conn, $sql);
        while($row = mysqli_fetch_assoc($result)){
                 echo '<tr>';

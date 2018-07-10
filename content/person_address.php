@@ -51,21 +51,26 @@ echo  '<tbody>';
 
 
     }
-      mysqli_close($conn);
+
 
 
   echo '</tbody>';
   echo '</table>';
   echo '<form>';
 
-  echo '<input type="button" value="Add new address" onclick="window.location.href=\'insert_person_address.php?person_id='.$person_id.'\'" class="btnsml"/>'
-  ;
+  // echo '<input type="button" value="Add new address" onclick="window.location.href=\'insert_person_address.php?person_id='.$person_id.'\'" class="btnsml"/>'
+  // ;
+
+  $result2 = mysqli_query($conn, "SELECT * FROM person natural join address natural join person_address where person_id = '$person_id' ");
+  $row2 = mysqli_fetch_assoc($result2);
+
+  echo '<a class="btnsml" href="insert_person_address.php?person_id='.$row2['person_id'].'">Add new address</a>';
   echo '<a href="person.php" class="btnsml">Back</a>';
 
 
   echo '</form>';
   echo '</div>';
-
+    mysqli_close($conn);
   ?>
 
 

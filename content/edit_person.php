@@ -9,6 +9,8 @@
   $result = mysqli_query($conn, $sql1);
   $row = mysqli_fetch_assoc($result);
 
+  // $showall=mysqli_query($conn, "SELECT")
+  // $showrow = mysqli_fetch_assoc($showall);
 
 ?>
 
@@ -41,12 +43,22 @@
     <input type="text" name="position" class="form-control" value="<?php echo isset ($row['position'])?$row['position']:''; ?>">
   </div>
 
-  <!-- Company -->
-  <div class="form-group">
-    <label>Company name</label>
-    <input type="text" name="name_de" class="form-control" value="<?php echo isset ($row['name_de'])?$row['name_de']:''; ?>">
-  </div>
 
+  <!-- company -->
+  <div class="form-group">
+    <label>Company name</label><br>
+    <select name="name_de">
+    <?php
+        $result1=mysqli_query($conn, "SELECT * FROM job right join company on job.company_id = company.company_id WHERE company.company_id <> 1");
+        while($row1=mysqli_fetch_assoc($result1)){
+          $selected = $row1['company_id']==$row['company_id']? 'selected="selected"':'';
+          echo '<option value="'.$row1['company_id'].'" '.$selected.' >'.$row1['name_de'].'</option>';
+        }
+    ?>
+
+    </select>
+
+  </div>
 
   <!-- Media type -->
   <div class="form-group">

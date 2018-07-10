@@ -1,7 +1,7 @@
 <?php
   require_once '../conn.php';
 
-  $person_id = isset($_GET['person_id'])? $_GET['person_id'] : '';
+  $person_id  = isset($_REQUEST['person_id'])? $_REQUEST['person_id']:'';
 
   $type=$err_type="";
   $street=$err_street="";
@@ -68,19 +68,19 @@
       $address_id = mysqli_insert_id($conn);
       mysqli_stmt_close($stmt1);
 
-      $sql3 = "SELECT * FROM person WHERE person_id = '$person_id'";
-      $result = mysqli_query($conn, $sql3);
-      while($row = mysqli_fetch_assoc($result)){
-        $pid = $row['person_id'];
+
+      $sql2 = "INSERT INTO person_address (person_id, address_id) VALUES (?, ?)";
+      if ($stmt2 = mysqli_prepare($conn, $sql2)){
+
+        mysqli_stmt_bind_param($stmt2, 'ii', $person_id, $address_id);
+        echo "INSERT INTO person_address (person_id, address_id) VALUES (?, ?) :$person_id, $address_id ";
       }
+      mysqli_stmt_execute($stmt2) or die(mysqli_error($conn));
+      mysqli_stmt_close($stmt2);
 
 
-      $sql2 = "INSERT INTO person_address (person_id, address_id) VALUES ('$person_id', '$address_id')";
-      mysqli_query($conn, $sql2) or die(mysqli_error($conn));
+      header("location: person_address.php");
 
-
-
-      header("location: person_address.php?person_id=$person_id");
     }
       mysqli_commit($conn);
 
@@ -151,19 +151,16 @@
 
     <!-- Country -->
     <div class="form-group <?php echo(!empty($err_country)) ? 'has-error' : ''; ?>">
-      <label>Country</label>
+      <label>Country</label><br><?php var_dump($_REQUEST) ?>
       <input type="text" name="country" class="form-control">
       <span class="help-block"><?php echo $err_country; ?></span>
     </div>
 
     <div class="form-group">
-      <input type="hidden" name="person_id" value="$person_id"/>
-      <input type="submit" class="btnsml" value="Confirm"/>
+      <input type="hidden" name="person_id" value="<?php echo $person_id ?>">
+      <input type="submit" name="submit" class="btnsml" value="Confirm"/>
       <input type="reset" class="btnsml" value="Reset"/>
     </div>
   </form>
 
   <?php include_once('../page/footer.php'); ?>
-
-
-  }
