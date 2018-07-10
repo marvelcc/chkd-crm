@@ -1,7 +1,7 @@
 <?php
   require_once '../conn.php';
 
-  $company_id = isset($_GET['company_id'])? $_GET['company_id'] : '';
+  $company_id = isset($_REQUEST['company_id'])? $_REQUEST['company_id'] : '';
 
   $type=$err_type="";
   $street=$err_street="";
@@ -73,12 +73,12 @@
       if ($stmt2 = mysqli_prepare($conn, $sql2)){
         mysqli_stmt_bind_param($stmt2, 'ii', $company_id, $address_id);
       }
-      mysqli_stmt_execute($stmt2);
+      mysqli_stmt_execute($stmt2) or die(mysqli_error($conn));
       mysqli_stmt_close($stmt2);
 
 
 
-      header("location: company.php");
+      header("location: company_address.php?company_id=$company_id");
     }
       mysqli_commit($conn);
 
@@ -155,6 +155,7 @@
     </div>
 
     <div class="form-group">
+      <input type="hidden" name="company_id" value="<?php echo $company_id ?>">
       <input type="submit" class="btnsml" value="Confirm">
       <input type="reset" class="btnsml" value="Reset">
     </div>

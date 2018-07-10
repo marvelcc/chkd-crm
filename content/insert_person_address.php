@@ -79,7 +79,7 @@
       mysqli_stmt_close($stmt2);
 
 
-      header("location: person_address.php");
+      header("location: person_address.php?person_id=$person_id");
 
     }
       mysqli_commit($conn);
