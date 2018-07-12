@@ -21,7 +21,7 @@ include_once('../page/head.php');
 <h3 style="padding-left:700px; font-weight:bolder;">Delete address</h3>
 <h4 style="padding-left:700px; font-weight:bolder;">Are you sure to delete the address?</h4>
 
-<form action="confirm_delete_company_address.php?address_id=<?php echo $address_id?>" method="post" class="wrapper1">
+<form action="confirm_delete_company_address.php?company_id=<?php echo $company_id ?>&address_id=<?php echo $address_id?>" method="post" class="wrapper1">
   <div class="form-group">
     <input type="hidden" name="address_id" value="<?php echo $address_id ?>" />
     <input type="submit" name="delete" class="btnsml" value="Confirm">

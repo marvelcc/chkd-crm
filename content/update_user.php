@@ -8,11 +8,11 @@
     $user_id = isset($_POST['user_id'])? $_POST['user_id'] : '';
     $role = implode(',', $_POST['roles']);
 
-    $sql1 = "UPDATE user natural join role natural join user_role SET first_name=? , last_name=? , email=?, mobile=? WHERE user_id= ?";
+    $sql1 = "UPDATE user natural join role natural join user_role SET u_first_name=? , u_last_name=? , email=?, mobile=? WHERE user_id= ?";
 
       if($stmt1 = mysqli_prepare($conn, $sql1)){
-        mysqli_stmt_bind_param($stmt1, 'ssssi', $_POST['first_name'], $_POST['last_name'], $_POST['email'], $_POST['mobile'], $user_id);}
-        mysqli_stmt_execute($stmt1);
+        mysqli_stmt_bind_param($stmt1, 'ssssi', $_POST['u_first_name'], $_POST['u_last_name'], $_POST['email'], $_POST['mobile'], $user_id);}
+        mysqli_stmt_execute($stmt1) or die(mysqli_error($conn));
         mysqli_stmt_close($stmt1);
 
 

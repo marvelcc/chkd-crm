@@ -1,7 +1,7 @@
 <?php
   require_once('../conn.php');
 
-  $user_id = isset($_GET['user_id'])? $_GET['user_id'] : '';
+  $user_id = isset($_REQUEST['user_id'])? $_REQUEST['user_id'] : '';
 
 
 

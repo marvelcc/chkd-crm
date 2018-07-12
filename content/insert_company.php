@@ -30,7 +30,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
       $err_name_de = "Please enter company's name!";
   }
   else {
-    $name_de = trim($_POST["name_de"]);
+    $query1 = "SELECT company_id FROM company where name_de = ?";
+    if($val1 = mysqli_prepare($conn, $query1)){
+      mysqli_stmt_bind_param($val1, 's', $val_name);
+      $val_name= trim($_POST['name_de']);
+      if(mysqli_stmt_execute($val1)){
+        mysqli_stmt_store_result($val1);
+        if(mysqli_stmt_num_rows($val1) == 1){
+          $err_name_de="This company already exists in the system!";
+        }
+        else{
+          $name_de = trim($_POST['name_de']);
+        }
+      }
+    }
   }
 
   // Webseite
@@ -276,6 +289,9 @@ include_once('../page/head.php');
       <option value="Automobile">Automobile</option>
       <option value="IT">IT</option>
       <option value="Finance">Finance</option>
+      <option value="Legal">Legal</option>
+      <option value="Textile">Textile</option>
+      <option value="Construction">Construction</option>
       <option value="Pharma">Pharma</option>
       <option value="Media">Media</option>
       <option value="Publishing">Publishing</option>

@@ -40,7 +40,7 @@ include_once('../page/head.php');
                 echo '<td>'. $row['GROUP_CONCAT(role_name)']. '<br><a class="btnsml" href="edit_user.php?user_id='.$row['user_id'].'">Edit</a></td>';
                 echo '<td>';
                 echo ' ';
-                echo '<a class="btnsml" href="delete_user.php?user_id='.$row['user_id'].'">Delete</a>';
+                echo '<a class="btnsml" href="delete_user.php">Delete</a>';
                 echo '</td>';
                 echo '</tr>';
        }

@@ -69,7 +69,7 @@ CREATE TABLE `company` (
   `c_remark` text,
   `c_date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `member_type` enum('Board','Counsil','Class A','Class B','Automotive Committee','Support','Not') NOT NULL,
-  `industry` enum('Agro','Metal','Automobile','Pharma','Finance','Media','Electronics','Logistic','Energy','Other','Publishing','IT','Manufacturing','Trading') NOT NULL,
+  `industry` enum('Agro','Metal','Automobile','Construction','Legal','Pharma','Finance','Media','Electronics','Logistic','Textile','Energy','Publishing','Manufacturing','IT','Trading','Other') NOT NULL,
   `parent_company` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -489,7 +489,7 @@ ALTER TABLE `user_has_task`
 -- Constraints for table `user_role`
 --
 ALTER TABLE `user_role`
-  ADD CONSTRAINT `fk_user_has_role_role1` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`) ON DELETE NO ACTION,
+  ADD CONSTRAINT `fk_user_has_role_role1` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_user_has_role_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE;
 COMMIT;
 
