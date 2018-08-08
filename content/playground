@@ -1,0 +1,169 @@
+<?php
+  $get = mysqli_query($conn, "SELECT name_de FROM company ORDER BY name_de ASC");
+  $select_company ='';
+  while ($row = mysqli_fetch_assoc($get)){
+    $select_company ='<option value = "'.$row['name_de'].'">'.$row['name_de'].'</option>';
+  }
+ ?>
+
+ ----------------------------------------------------------------------------------------------
+
+
+ <?php
+ 	require_once("db.php");
+ 	if (isset($_POST['submit'])) {
+ 		$sql = $conn->prepare("UPDATE tbl_emp_details SET department=? , name=? , email=?  WHERE id=?");
+ 		$department=$_POST['department'];
+ 		$name = $_POST['name'];
+ 		$email= $_POST['email'];
+ 		$sql->bind_param("sssi",$department, $name, $email,$_GET["id"]);
+ 		if($sql->execute()) {
+ 			$success_message = "Edited Successfully";
+ 		} else {
+ 			$error_message = "Problem in Editing Record";
+ 		}
+
+ 	}
+ 	$sql = $conn->prepare("SELECT * FROM tbl_emp_details WHERE id=?");
+ 	$sql->bind_param("i",$_GET["id"]);
+ 	$sql->execute();
+ 	$result = $sql->get_result();
+ 	if ($result->num_rows > 0) {
+ 		$row = $result->fetch_assoc();
+ 	}
+ 	$conn->close();
+ ?>
+ <html>
+ <head>
+ <link href="style.css" rel="stylesheet" type="text/css" />
+ <style>
+ .tbl-qa{border-spacing:0px;border-radius:4px;border:#6ab5b9 1px solid;}
+ </style>
+ <title>employee edit </title>
+ </head>
+ <body>
+ <?php if(!empty($success_message)) { ?>
+ <div class="success message"><?php echo $success_message; ?></div>
+ <?php } if(!empty($error_message)) { ?>
+ <div class="error message"><?php echo $error_message; ?></div>
+ <?php } ?>
+ <form name="frmUser" method="post" action="">
+ <div class="button_link"><a href="index.php" >Back to List </a></div>
+ <table border="0" cellpadding="10" cellspacing="0" width="500" align="center" class="tbl-qa">
+ 	<thead>
+ 		<tr>
+ 			<th colspan="2" class="table-header">Employee Edit</th>
+ 		</tr>
+ 	</thead>
+ 	<tbody>
+ 		<tr class="table-row">
+ 			<td><label>Department</label></td>
+ 			<td><input type="text" name="department" class="txtField" value="<?php echo $row["department"]?>"></td>
+ 		</tr>
+ 		<tr class="table-row">
+ 			<td><label>Name</label></td>
+ 			<td><input type="text" name="name" class="txtField" value="<?php echo $row["name"]?>"></td>
+ 		</tr>
+ 		<tr class="table-row">
+ 			<td><label>Email</label></td>
+ 			<td><input type="text" name="email" class="txtField" value="<?php echo $row["email"]?>"></td>
+ 		</tr>
+ 		<tr class="table-row">
+ 			<td colspan="2"><input type="submit"  name="submit" value="Submit" class="demo-form-submit"></td>
+ 		</tr>
+ 	</tbody>
+ </table>
+ </form>
+ </body>
+ </html>
+
+
+ -------------------------------------------------------------------------------------------
+
+ <table border="0" cellpadding="10" cellspacing="0" width="500" align="center" class="tbl-qa">
+ 	<thead>
+ 		<tr>
+ 			<th colspan="2" class="table-header">Edit Contacts</th>
+ 		</tr>
+ 	</thead>
+ 	<tbody>
+ 		<tr class="table-row">
+ 			<td><label>First name</label></td>
+ 			<td><input type="text" name="first_name" class="txtField" value="<?php echo isset($row['first_name']) ? $row ['first_name'] : ''; ?> "></td>
+ 		</tr>
+ 		<tr class="table-row">
+ 			<td><label>Last name</label></td>
+ 			<td><input type="text" name="last_name" class="txtField" value="<?php echo isset($row['last_name']) ? $row['last_name'] : '';?>"></td>
+ 		</tr>
+ 		<tr class="table-row">
+ 			<td><label>Email</label></td>
+ 			<td><input type="text" name="p_email" class="txtField" value="<?php echo $row['p_email']?>"></td>
+ 		</tr>
+ 		<tr class="table-row">
+ 			<td colspan="2"><input type="submit"  name="submit" value="Submit" class="btnsml"></td>
+ 		</tr>
+ 	</tbody>
+ </table>
+
+
+----------------------------------------------------------------------------------------
+
+<div class="form-group">
+  <label>Address Type</label>
+  <?php
+    echo '<select name="type">';
+    $sql = "SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS
+  WHERE TABLE_NAME = 'address' AND COLUMN_NAME = 'type'";
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_array($result);
+    $enumlist = explode(",", str_replace("'", "", substr($row['COLUMN_TYPE'], 5, (strlen($row['COLUMN_TYPE'])-6))));
+
+    foreach ($enumlist as $value_a) {
+      echo '  <option value="'.$value_a.'"  '; ?>
+      <?php if($row['COLUMN_TYPE'] == "'.$value_a.'") echo 'selected="selected"'; ?>
+      <?php
+      echo ">'.$value_a.'</option>";
+      }
+      echo '</select>';
+  ?>
+
+</div>
+
+-----------------------------------------------------------------------------
+
+
+<label>User role</label>
+<br>
+<select name="role">
+  <option value="not_selected">Please select</option>
+  <option value="Admin">Admin</option>
+  <option value="Manager">Manager</option>
+  <option value="Staff">Staff</option>
+  <option value="Intern">Intern</option>
+  <option value="External">External</option>
+</select>
+<span class="help-block"><?php echo $err_priority; ?></span>
+
+-----------------------------------------------------------------------------
+
+<?php
+$sql="SELECT * from role";
+$list = mysqli_query($conn, $sql);
+while($checkbox = mysqli_fetch_assoc($list)){
+  echo'<input type="checkbox" name="roles[]" value="'.$checkbox['role_id'].'">'.$checkbox['role_name'].'</input>';
+  echo '<br>';
+}
+
+ ?>
+------------------------------------------------------------------------------------
+<input type="checkbox" name="roles[]" value="1" <?php if(in_array($row['role_id'], $array)) echo 'checked="checked"'; ?>>Admin</input><br>
+<input type="checkbox" name="roles[]" value="2" <?php if(in_array($row['role_id'], $array)) echo 'checked="checked"'; ?>>Manager</input><br>
+<input type="checkbox" name="roles[]" value="3" <?php if(in_array($row['role_id'], $array)) echo 'checked="checked"'; ?>>Staff</input><br>
+<input type="checkbox" name="roles[]" value="4" <?php if(in_array($row['role_id'], $array)) echo 'checked="checked"'; ?>>Intern</input><br>
+<input type="checkbox" name="roles[]" value="5" <?php if(in_array($row['role_id'], $array)) echo 'checked="checked"'; ?>>External</input>
+---------------------------------------------------------------------------------------
+<!-- Company -->
+<div class="form-group">
+  <label>Company name</label>
+  <input type="text" name="name_de" class="form-control" value="<?php echo isset ($row['name_de'])?$row['name_de']:''; ?>">
+</div>

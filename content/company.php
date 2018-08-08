@@ -26,15 +26,8 @@ include_once('../page/head.php');
         <th>Company homepage</th>
         <th>Telephone</th>
         <th>Email</th>
-        <th>Member type</th>
         <th>Industry</th>
         <th>Service region</th>
-        <th>Employee count</th>
-        <th>Registration number</th>
-        <th>Annual revenue</th>
-        <th>Parent company</th>
-        <th>Remark</th>
-        <th>Added on</th>
         <th>Addresses</th>
         <th> </th>
       </tr>
@@ -49,17 +42,10 @@ include_once('../page/head.php');
                 echo '<td>'. $row['website'] . '</td>';
                 echo '<td>'. $row['c_tel'] . '</td>';
                 echo '<td>'. $row['c_email'] . '</td>';
-                echo '<td>'. $row['member_type']. '</td>';
                 echo '<td>'. $row['industry']. '</td>';
                 echo '<td>'. $row['service_region']. '</td>';
-                echo '<td>'. $row['employee_count']. '</td>';
-                echo '<td>'. $row['registration_nr']. '</td>';
-                echo '<td>'. $row['annual_revenue']. '</td>';
-                echo '<td>'. $row['parent']. '</td>';
-                echo '<td>'. $row['c_remark']. '</td>';
-                echo '<td>'. $row['c_date_added']. '</td>';
                 echo '<td>';
-                echo '<a class="btnsml" href="company_address.php?company_id='.$row['company_id'].'">Detail</a>';
+                echo '<a class="btnsml" href="company_address.php?company_id='.$row['company_id'].'">Show</a>';
                 echo '</td>';
                 echo '<td>';
                 echo '<a class="btnsml" href="edit_company.php?company_id='.$row['company_id'].'">Edit</a>';
